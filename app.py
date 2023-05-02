@@ -6,16 +6,14 @@ from sqlalchemy import text
 db = SQLAlchemy()
 # create the app
 app = Flask(__name__)
+
+app.config.from_pyfile("config.py")
+app.config.from_object('config.ProdConfig')
+
 # configure the SQLite database, relative to the app instance folder
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:password@127.0.0.1/snyk-test"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://{}:{}@{}/{}".format(app.config["DATABASE_USERNAME"], app.config["DATABASE_PASSWORD"], app.config["DATABASE_HOSTNAME"], app.config["DATABASE_NAME"])
 # initialize the app with the extension
 db.init_app(app)
-
-password = 'password';
-secret = "secret";
-
-aws_access_key_id="AKIAJWY3D3GJ6N4UTEST"
-aws_secret_acces_key="CmeRfzYcE2lD1z8AeKkM1E4j9G4fW8o5H2xLTEST"
 
 @app.route("/")
 def hello_world():
@@ -30,10 +28,12 @@ def testdb():
         else:
             rs = con.execute(text('SELECT * FROM users'))
 
-        for row in rs:
-            print(row)
+        results_as_dict = rs.mappings().all()
 
-    return "db"
+    try:
+        return "db" + results_as_dict[0].username
+    except:
+        return "db"
 
 @app.route("/while")
 def whileTest():
