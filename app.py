@@ -15,6 +15,9 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://{}:{}@{}/{}".format(app.config[
 # initialize the app with the extension
 db.init_app(app)
 
+ANOTHER_DATABASE_PASSWORD="sk_test_kovrMB0mupFJXfNZWx6Etg5y"
+AND_ANOTHER_DATABASE_PASSWORD="sk_live_454kjkj4545FD3434Srere7878"
+
 @app.route("/")
 def hello_world():
     return "<p>Hellow, World!</p>"
